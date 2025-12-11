@@ -18,6 +18,7 @@ axios request interceptor
     - API POST /api/auth/refresh
     - IF success:
       - update accessToken and refreshToken in secure storage
+      - apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken
       - unlock refresh mechanism: isRefreshing = false
       - retry waitlisted calls, for each handle in failedQueue:
         - unfreeze request: pass it the new token and retry them
@@ -34,6 +35,8 @@ COMPONENT AuthProvider
   STATE:
   - userToken = null
   - isLoading = true
+  - isLoggingIn = false
+  - error = null
 
   ONMOUNT (EFFECT):
   - retrieve access token
@@ -45,18 +48,31 @@ COMPONENT AuthProvider
     - IF refresh fails, call signOut()
     -> cleanup interceptor on unmount
 
-  HANDLER:
-  - signIn (accessToken, refreshToken)
+  HANDLERS:
+  - signIn (accessToken, refreshToken) // keep this as a general token handler
     - save accessToken and refreshToken in SecureStore
     - userToken = accessToken, isLoading = false
   - signOut:
     - delete tokens from SecureStore
     - userToken = null
+  - signInWithGoogle (idToken)
+    isLoggingIn = true
+    error = null
+    TRY:
+      - send userInfo.idToken to HTTPS POST /api/auth/google/verify
+      - retrieve accessToken and refreshToken from response
+      - signIn(accessToken, refreshToken)
+    CATCH:
+      - set error message
+    FINALLY:
+      - isLoggingIn = false
 
   CONTEXT:
   - handlers
   - userToken
   - isLoading
+  - isLoggingIn
+  - error
 
   RENDER:
   <AuthContext.Provider value={contextValue}>

@@ -7,7 +7,7 @@ COMPONENT App
     </AuthProvider>
 
 COMPONENT RootNavigator
-  STATE:
+  HOOKS:
   - isLoading, userToken = useAuth()
 
   RENDER:

@@ -11,16 +11,25 @@ GoogleSignin.configure({
 
 COMPONENT SignInScreen
   PROPS: -
-  STATE: -
+
+  STATE:
+  - isSigningIn = false
+
+  HOOKS
+  - {isLoggingIn, error, signInWithGoogle} = useAuth()
+
   EFFECT: -
-  HANDLER: signInWithGoogle
+
+  HANDLER: handleGoogleButtonPress
+    isSigningIn = true
     TRY:
       - await GoogleSignin.hasPlayServices()
       - userInfo = await GoogleSignin.signIn()
-      - send userInfo.idToken to HTTPS POST /api/auth/google
-      - retrieve accessToken and refreshToken from response
-      - useAuth().signIn(newToken)
+      - signInWithGoogle(userInfo.idToken)
     CATCH:
       - show error message
+    FINALLY:
+      - isSigningIn = false
+
   RENDER:
-    <GoogleLogoButton onPress={signInWithGoogle}>Google Sign in</GoogleLogoButton>
+    <GoogleLogoButton onPress={handleGoogleButtonPress}>Google Sign in</GoogleLogoButton>
