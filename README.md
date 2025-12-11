@@ -103,3 +103,19 @@ This phase ensures the session is securely terminated.
 
 3.  **Server Revocation:**
     (Optional but recommended) The app sends a final request to `/auth/logout`. The backend finds the Refresh Token in the database and marks it as permanently revoked, ensuring it cannot be used again if it was compromised.
+
+
+
+
+# OTHER CONSIDERATIONS
+
+- Apple tax: on iOS for App Store, if app offers third party login, it MUST also offer Apple login
+- Database bloat: setup cronjobs to cleanup refresh tokens expired more than 7 days ago
+- Google Play Services & Emulators: Android emulators do not have Google Play Services. Use a system image that has Google Play Store, or test in a real android device
+- Existing duped user:
+  - request with google email: alice@example.com + google sub: 123
+  - does provider: google and id: 123 exist in identities table?
+    - YES: log in
+    - NO: search users table for email
+      - FOUND: create new identity and link to found user
+      - NOT FOUND: create new user and new identity

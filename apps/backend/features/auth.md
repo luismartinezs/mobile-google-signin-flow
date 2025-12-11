@@ -60,6 +60,8 @@ ROUTE: POST /auth/logout
     - IF valid: invalidate refreshToken -> 200 OK
     - ELSE: throw error 'Invalid refreshToken' -> 401 UNAUTHORIZED
 
+CRONJOB:
+- clean up expired refresh tokens which expired more than 7 days ago
 
 MIDDLEWARE: authMiddleware
 - CHECK HEADERS
