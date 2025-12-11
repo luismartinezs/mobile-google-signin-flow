@@ -1,0 +1,9 @@
+- google auth
+  - retrieve SHA-1 fingerprint from app keystore
+  - register app with google
+    - go to google cloud console
+    - create new project
+    - Create TWO OAuth 2.0 Client ID for "Android" + add SHA-1 app fingerprint
+      - one for local dev/EAS builds using Upload Key SHA-1
+      - one for play store version using App Signing Key SHA-1 (in google play console under App Signing)
+    - Create an OAuth 2.0 Client ID for "Web Application" and note the web client ID

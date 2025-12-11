@@ -1,0 +1,2 @@
+- API POST /api/private { accessToken }
+  - IF 401: auth.refreshToken

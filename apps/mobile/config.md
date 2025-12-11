@@ -1,0 +1,9 @@
+- google auth
+  - expo
+    - plugin: @react-native-google-signin/google-signin
+  - setup
+    - install react-native-google-signin dep
+    - create first EAS build
+    - build project for app stores
+    - manually upload android app first time
+    - configure google cloud console project (see ../config.md)
