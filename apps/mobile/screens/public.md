@@ -11,25 +11,20 @@ GoogleSignin.configure({
 
 COMPONENT SignInScreen
   PROPS: -
+  STATE: -
 
-  STATE:
-  - isSigningIn = false
-
-  HOOKS
+  HOOKS:
   - {isLoggingIn, error, signInWithGoogle} = useAuth()
 
   EFFECT: -
 
   HANDLER: handleGoogleButtonPress
-    isSigningIn = true
     TRY:
       - await GoogleSignin.hasPlayServices()
       - userInfo = await GoogleSignin.signIn()
-      - signInWithGoogle(userInfo.idToken)
+      - await signInWithGoogle(userInfo.idToken)
     CATCH:
       - show error message
-    FINALLY:
-      - isSigningIn = false
 
   RENDER:
     <GoogleLogoButton onPress={handleGoogleButtonPress}>Google Sign in</GoogleLogoButton>
