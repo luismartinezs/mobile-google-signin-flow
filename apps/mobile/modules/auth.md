@@ -1,32 +1,5 @@
 IMPORT
-- axios
-
-apiClient = axios.create({baseUrl})
-
-STATE
-- isRefreshing = false
-- failedQueue = []
-
-axios request interceptor
-- IF 401 error (access token not valid)
-  - IF isRefreshing:
-    - create a "handle" that allows request to be resumed later
-    - push handle to failedQueue
-    - freeze request (do nothing)
-  - ELSE:
-    - isRefreshing = true
-    - API POST /api/auth/refresh
-    - IF success:
-      - update accessToken and refreshToken in secure storage
-      - apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken
-      - unlock refresh mechanism: isRefreshing = false
-      - retry waitlisted calls, for each handle in failedQueue:
-        - unfreeze request: pass it the new token and retry them
-      - clear failedQueue
-      - retry current request
-    - ELSE:
-      - isRefreshing = false, reject all waitlisted calls
-      - do NOT call signout endpoint as it will trigger an infinite loop. signOut clientside only (AuthProvider)
+- apiClient, setupAuthInterceptors
 
 AuthContext
 COMPONENT AuthProvider
